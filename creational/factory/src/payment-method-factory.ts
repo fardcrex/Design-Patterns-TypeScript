@@ -6,18 +6,14 @@ import Visa from "./types/Visa";
 
 export default class PaymentMethodFactory {
     public static createPaymentType(type: PaymentType): IPaymentMethod {
-        if (type === PaymentType.Mastercard) {
-            return new MasterCard();
-        }
+        const selecter = {
+            [PaymentType.Mastercard]: new MasterCard(),
+            [PaymentType.PayPal]: new PayPal(),
+            [PaymentType.Visa]: new Visa()
+        };
 
-        if (type === PaymentType.PayPal) {
-            return new PayPal();
-        }
+        if (!selecter[PaymentType]) throw new Error('Invalid payment method type.');
 
-        if (type === PaymentType.Visa) {
-            return new Visa();
-        }
-
-        throw new Error("Invalid payment method type.");
+        return selecter[PaymentType];
     }
 }
